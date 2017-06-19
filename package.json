@@ -1,0 +1,31 @@
+{
+  "name": "SpectrumPlot2",
+  "version": "0.1.0",
+  "description": "Display spectrum data with minimal effort",
+  "main": "src/SpectrumPlot2.js",
+  "repository": "jonathanlurie/SpectrumPlot2",
+  "moduleName": "SpectrumPlot2",
+  "moduleFormat": "umd",
+  "moduleBuildDir": "dist",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c",
+    "build-min": "npm run build && printf \"// Build date: $(date '+%Y-%m%-dT%H:%M:%S')\n\n\" > dist/SpectrumPlot2.min.js && cat header.txt >> dist/SpectrumPlot2.min.js && google-closure-compiler-js dist/SpectrumPlot2.js >> dist/SpectrumPlot2.min.js",
+    "doc": "documentation src/SpectrumPlot2.js -o ./doc/ -f html"
+  },
+  "author": "Jonathan Lurie",
+  "license": "MIT",
+  "devDependencies": {
+    "documentation": "^3.0.4",
+    "google-closure-compiler-js": "^20170218.0.0",
+    "gulp": "^3.9.1",
+    "gulp-rollup": "^2.11.0",
+    "gulp-sourcemaps": "^2.4.1",
+    "rollup": "^0.36.4",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^2.0.0"
+  },
+  "dependencies": {
+    "chart.js": "^2.6.0"
+  }
+}

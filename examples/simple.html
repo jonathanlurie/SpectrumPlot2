@@ -1,0 +1,44 @@
+<html>
+<head>
+  <title>Test</title>
+  
+  <style>
+  #chartDiv {
+    width: 500px;
+    height: 300px;
+  }
+  
+  </style>
+  
+  <!-- importing the automatically build module -->
+  <script src="../dist/SpectrumPlot2.js"></script>
+  
+</head>
+<body>
+  
+
+  <div id="chartDiv"></div>
+
+  <script>
+
+    var sp = new SpectrumPlot2.SpectrumPlot2( "chartDiv", 400, 300 );
+    
+    var intensityIndex = sp.addSpectrum( 
+      "Intensity", 
+      [10, 20, 30, 40, 50, 60, 70],
+      "rgba(200, 200, 0, 0.8)"
+    )
+    
+    sp.setLabels();
+    
+    sp.draw();
+    
+    
+    sp.updateSpectrum( intensityIndex, [100, 110, 10, 130, 140, 150, 160]);
+    sp.setLabels();
+    sp.draw();
+
+  </script>
+
+</body>
+</html>
