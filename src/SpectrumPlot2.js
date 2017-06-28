@@ -1,5 +1,6 @@
 
 import Chart from 'chart.js'
+import annotationPlugin from 'chartjs-plugin-annotation'
 
 class SpectrumPlot2 {
   
@@ -19,48 +20,71 @@ class SpectrumPlot2 {
     this._canvas.height = height;
     this._parentElem.appendChild(this._canvas);
     
+    // when placing a marker on a click (vertical bar)
+    // the spectrum data are stored here, and can get retrieved with the getter `.getMarkerData()`
+    this._markerData = []
+    
+    this._events = {
+      hover: null,
+      click: null
+    };
+    
+    // colors of the vertical markers
+    this._verticalMarkers = {
+      enabled: false,
+      clickColor: "#000",
+      hoverColor: "#66F",
+      hiddenColor: "rgba(0, 0, 0, 0)"
+    }
+    
     this._initChart();
   }
   
   
   _initChart(){
+    var that = this;
     var ctx = this._canvas.getContext('2d');
+    
+    // return an array of hovered values.
+    // used for hover and click event on the plot
+    function getHoveredValues( chartElements ){
+      var hoveredValues = []
+      if( chartElements && chartElements.length){
+        var x = chartElements[0]._index;
+        for(var i=0; i<chartElements.length; i++){
+          hoveredValues.push({
+            label: that._chartData.datasets[i].label,
+            x: that._chartData.labels[x],
+            y: that._chartData.datasets[i].data[x]
+          })
+        }
+      }
+      return hoveredValues;
+    }
+    
     
     this._chart =  new Chart(ctx, {
       type: 'line',
       data: {
-        /*
-        labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-        datasets: [
-          {
-            label: "The red line",
-            borderColor: "rgba(255, 0, 0, 1)",
-            pointBackgroundColor: "rgba(255, 0, 0, 0.25)",
-            pointBorderWidth: 0,
-            pointBorderColor: "rgba(0, 0, 0, 0)",
-            pointRadius: 3,
-            borderWidth: "1px",
-            data: [100, 20, 140, 60, 180, 100, 220, 140, 260, 180, 300, 220],
-            fill: false,
-          },
-          
-          {
-            label: "The blue line",
-            borderColor: "rgba(0, 0, 255, 1)",
-            pointBackgroundColor: "rgba(0, 0, 255, 0.25)",
-            pointBorderWidth: 0,
-            pointBorderColor: "rgba(0, 0, 0, 0)",
-            pointRadius: 3,
-            borderWidth: "1px",
-            data: [20, 140, 60, 180, 100, 220, 140, 260, 180, 300, 220, 340],
-            fill: false,
-          },
-          
-        ] // END of datasets
-        */
       }, // END of data
       
       options: {
+        
+        onClick: function(evt, chartElements){
+          var hoveredValues = getHoveredValues( chartElements );
+          that._markerData = hoveredValues;
+          
+          if( hoveredValues.length ){
+            that._chart.options.annotation.annotations[0].value = hoveredValues[0].x;
+            that._chart.update();
+          }
+          
+          // call the click event
+          if( that._events.click ){
+            that._events.click.call(null, hoveredValues);
+          }
+          
+        },
         responsive: true,
 
         scales: {
@@ -89,8 +113,62 @@ class SpectrumPlot2 {
         },
         hover: {
             animationDuration: 0, // duration of animations when hovering an item
+            intersect: false,
+            mode: 'index',
+            onHover: function( evt, chartElements){
+              var hoveredValues = getHoveredValues( chartElements );
+              
+              if( hoveredValues.length ){
+                that._chart.options.annotation.annotations[1].value = hoveredValues[0].x;
+                that._chart.update()
+              }
+              
+              // call the hover event
+              if( that._events.hover ){
+                that._events.hover.call(null, hoveredValues);
+              }
+              
+            },
         },
         responsiveAnimationDuration: 0, // animation duration after a resize
+        
+        // the legend at the top
+        legend: {
+          labels: {
+            usePointStyle: true
+          }
+        },
+        
+        annotation: {
+          //events: null,
+          
+          annotations: [
+            
+            {
+              drawTime: "afterDatasetsDraw",
+              id: "clickLine",
+              type: "line",
+              mode: "vertical",
+              scaleID: "x-axis-0",
+              value: -Infinity,
+              borderColor: that._verticalMarkers.enabled ? that._verticalMarkers.clickColor : that._verticalMarkers.hiddenColor ,
+              borderWidth: 1,
+            },
+            
+            {
+              drawTime: "afterDatasetsDraw",
+              id: "hoverLine",
+              type: "line",
+              mode: "vertical",
+              scaleID: "x-axis-0",
+              value: -Infinity,
+              borderColor: that._verticalMarkers.enabled ? that._verticalMarkers.hoverColor : that._verticalMarkers.hiddenColor,
+              borderWidth: 1,
+              
+            },
+            
+          ]
+        } // END of annotation
         
       } /* END of options */
       
@@ -98,6 +176,16 @@ class SpectrumPlot2 {
     });
     
     this._chartData = this._chart.chart.data;
+    
+    this._canvas.addEventListener('mouseleave', function( evt ){
+      that._chart.options.annotation.annotations[1].borderColor = that._verticalMarkers.hiddenColor;
+      that._chart.update();
+    });
+    
+    this._canvas.addEventListener('mouseenter', function( evt ){
+      that._chart.options.annotation.annotations[1].borderColor = that._verticalMarkers.enabled ? that._verticalMarkers.hoverColor : that._verticalMarkers.hiddenColor;
+    });
+    
   }
     
     
@@ -137,7 +225,7 @@ class SpectrumPlot2 {
       pointBackgroundColor: displayPoint ? color : "rgba(0, 0, 0, 0)",
       pointBorderWidth: 0,
       pointBorderColor: "rgba(0, 0, 0, 0)",
-      pointRadius: 2,
+      pointRadius: 0,
       borderWidth: "1px",
       data: data,
       fill: false,
@@ -170,6 +258,60 @@ class SpectrumPlot2 {
   */
   draw(){
     this._chart.update();
+  }
+  
+  
+  /**
+  * Specify a callback to an event. Events "click" and "hover" are available.
+  * The callback will be called with the spectrum data at the pointer position
+  */
+  on( eventName, callback ){
+    // only predefined events are allowed
+    if( eventName in this._events && typeof callback === "function" ){
+      this._events[ eventName ] = callback;
+    }
+  }
+  
+  
+  /**
+  * Get the spectrum data under the annotation, perfomed at the last click
+  * @return {Array} each element is {x: Number, y: Number, label: String}
+  */
+  getMarkerData(){
+    return this._markerData;
+  }
+  
+  
+  enableMarkers(){
+    this._verticalMarkers.enabled = true;
+    this._updateMarkerColor();
+  }
+  
+  
+  disableMarkers(){
+    this._verticalMarkers.enabled = false;
+    this._updateMarkerColor();
+  }
+  
+  
+  _updateMarkerColor(){
+    if(this._verticalMarkers.enabled){
+      this._chart.options.annotation.annotations[0].borderColor = this._verticalMarkers.clickColor;
+      this._chart.options.annotation.annotations[1].borderColor = this._verticalMarkers.hoverColor;
+    }else{
+      this._chart.options.annotation.annotations[0].borderColor = this._verticalMarkers.hiddenColor;
+      this._chart.options.annotation.annotations[1].borderColor = this._verticalMarkers.hiddenColor;
+    }
+    
+    this.draw();
+  }
+  
+  
+  setMarkerColor( eventName, cssColor ){
+    if( (eventName + "Color") in  this._verticalMarkers ){
+      this._verticalMarkers[ eventName + "Color" ] = cssColor;
+      this._updateMarkerColor();
+    }
   }
   
 

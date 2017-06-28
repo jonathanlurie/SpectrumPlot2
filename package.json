@@ -26,6 +26,7 @@
     "rollup-plugin-node-resolve": "^2.0.0"
   },
   "dependencies": {
-    "chart.js": "^2.6.0"
+    "chart.js": "^2.6.0",
+    "chartjs-plugin-annotation": "^0.5.5"
   }
 }

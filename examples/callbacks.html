@@ -11,13 +11,11 @@
   }
   
   h1 {
-    margin-top: 10px;
     width: 100%;
     text-align: center;
     font-size: 4em;
     color: #ff4848;
     margin-bottom: initial;
-    margin-top: 80px;
   }
   
   h2 {
@@ -59,7 +57,7 @@
   #chartDiv {
     padding: 20px;
     background-color: #fafafa;
-    margin-top: 50px;
+    margin-top: 10px;
     border-radius: 15px;
   }
   
@@ -76,16 +74,45 @@
     <h1>SpectrumPlot2</h1>
     <h2><a href="https://github.com/jonathanlurie/SpectrumPlot2">fork it on Github</a></h2>
     <div id="description">
-      Here, each spectrum's <code>Array</code> is updated with new values at every <code>mousemove</code>
+      Calling <code>.enableMarkers()</code> shows a vertical bars on hovering and a more persistant one on clicking
       <br>
-      Thus, calling <code>.updateSpectrum()</code> is NOT required.
+      By defining the <code>hover</code> and <code>click</code> callbacks with the method <code>.on()</code> we can get the hovered or clicked values.
+      <br><br>
+      <div id="hoveredData">--- hover the plot ---</div>
+      <div id="clickedData">--- click on the plot ---</div>
     </div>
+    
     <div id="chartDiv"></div>
   </div>
 
   <script>
+    var hoveredDataDiv = document.getElementById("hoveredData");
+    var clickedDataDiv = document.getElementById("clickedData");
 
     var sp = new SpectrumPlot2.SpectrumPlot2( "chartDiv", 400, 300 );
+    
+    // enabling the vertical bars
+    sp.enableMarkers();
+    
+    // changing the default marker colors
+    sp.setMarkerColor("hover", "#a0a");
+    sp.setMarkerColor("click", "#088");
+    
+    // adding a callbacks for clicking on the plot
+    sp.on("click", function(data){
+      clickedDataDiv.innerHTML = "Cliked: ";
+      data.forEach(function(elem){
+        clickedDataDiv.innerHTML += " " + elem.label + ": (" + Math.round(elem.x) + ", " + Math.round(elem.y) + ") ";
+      })
+    })
+    
+    // adding a callbacks for hovering the plot
+    sp.on("hover", function(data){
+      hoveredDataDiv.innerHTML = "Hovered: ";
+      data.forEach(function(elem){
+        hoveredDataDiv.innerHTML += " " + elem.label + ": (" + Math.round(elem.x) + ", " + Math.round(elem.y) + ") ";
+      })
+    })
     
     var seriesSize = 100;
     var redSeries = new Array(seriesSize);

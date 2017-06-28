@@ -1,10 +1,9 @@
 # What is it for?
-[DEMO](http://me.jonathanlurie.fr/SpectrumPlot2/examples/)
+[DEMO](http://me.jonathanlurie.fr/SpectrumPlot2/examples/) & [DEMO with markers](http://me.jonathanlurie.fr/SpectrumPlot2/examples//callbacks.html)
 Displaying line charts like that  
 ![](screenshot/screenshot.png)
 
 # Instanciate
-
 To create an instance of SpectrumPlot2, we need:
 - a parent div (its ID as a String or directly the DOM object)
 - a desired width and height
@@ -143,7 +142,6 @@ function moveMouse(evt){
   // redraw the chart
   sp.draw();
 }
-}
 ```
 Here, we:
 - have spectrum of a random length
@@ -154,6 +152,58 @@ Here, we:
 - re-draw
 
 This piece of code is taken from [examples/newArrays.html](examples/newArrays.html). Obviously, this is not optimal way to deal with this case since the length of each spectrum remains the same all along.
+
+# Add marker from pointer position
+Line in this [example](http://me.jonathanlurie.fr/SpectrumPlot2/examples//callbacks.html), SpectrumPlot2 allows to have 2 vertical lines for:
+- showing the current pointer position, moves with the pointer
+- showing the last clicked position
+
+To enable this feature:
+```javascript
+var sp = new SpectrumPlot2.SpectrumPlot2( "chartDiv", 400, 300 );
+
+// enabling the vertical bars
+sp.enableMarkers();
+...
+```
+
+## Get the data
+Retriveing the last clik data is possible using `.getMarkerData()`. It will return an `Array` where each element has a curve's `label`, a `x` value and a `y` value. There are as many elements as there are curves on the plot.
+
+## Color
+The default color for these markers are *black* and *blue* but they can be changed:  
+```javascript
+var sp = new SpectrumPlot2.SpectrumPlot2( "chartDiv", 400, 300 );
+sp.enableMarkers();
+
+sp.setMarkerColor("hover", "#F00");
+sp.setMarkerColor("click", "#990");
+```
+
+
+# Events
+We can add two kinds of callbacks:
+- `"click"`, called whenever the plot is clicked  
+- `"hover"`, called whenever the plot is hovered by the pointer
+
+Both are defined with the method `.on()`, like follows:  
+```javascript
+var sp = new SpectrumPlot2.SpectrumPlot2( "chartDiv", 400, 300 );
+
+// adding a callbacks for clicking on the plot
+sp.on("click", function(data){
+  console.log( data );
+})
+
+// adding a callbacks for hovering the plot
+sp.on("hover", function(data){
+  console.log( data );
+})
+```
+
+in Both case, the `data` object is an `Array` that contains as many element as there are curves displayed on the plot. Each element contains the `label` of the curve, the `x` position and the `y` value.
+
+Note: even though this feature is close to the vertical marker, markers don't need to be anabled for the callbacks to work.
 
 # License
 MIT 
