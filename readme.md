@@ -1,5 +1,5 @@
 # What is it for?
-[DEMO](http://me.jonathanlurie.fr/SpectrumPlot2/examples/) & [DEMO with markers](http://me.jonathanlurie.fr/SpectrumPlot2/examples//callbacks.html)
+[DEMO](http://me.jonathanlurie.fr/SpectrumPlot2/examples/) & [DEMO with markers](http://me.jonathanlurie.fr/SpectrumPlot2/examples/callbacks.html)
 Displaying line charts like that  
 ![](screenshot/screenshot.png)
 
@@ -154,7 +154,7 @@ Here, we:
 This piece of code is taken from [examples/newArrays.html](examples/newArrays.html). Obviously, this is not optimal way to deal with this case since the length of each spectrum remains the same all along.
 
 # Add marker from pointer position
-Line in this [example](http://me.jonathanlurie.fr/SpectrumPlot2/examples//callbacks.html), SpectrumPlot2 allows to have 2 vertical lines for:
+Line in this [example](http://me.jonathanlurie.fr/SpectrumPlot2/examples/callbacks.html), SpectrumPlot2 allows to have 2 vertical lines for:
 - showing the current pointer position, moves with the pointer
 - showing the last clicked position
 
