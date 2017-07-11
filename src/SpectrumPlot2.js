@@ -75,8 +75,7 @@ class SpectrumPlot2 {
           that._markerData = hoveredValues;
           
           if( hoveredValues.length ){
-            that._chart.options.annotation.annotations[0].value = hoveredValues[0].x;
-            that._chart.update();
+            that.setVerticalClickMarkerValue(hoveredValues[0].x)
           }
           
           // call the click event
@@ -119,8 +118,7 @@ class SpectrumPlot2 {
               var hoveredValues = getHoveredValues( chartElements );
               
               if( hoveredValues.length ){
-                that._chart.options.annotation.annotations[1].value = hoveredValues[0].x;
-                that._chart.update()
+                that.setVerticalHoverMarkerValue( hoveredValues[0].x )
               }
               
               // call the hover event
@@ -314,7 +312,16 @@ class SpectrumPlot2 {
     }
   }
   
-
+  
+  setVerticalClickMarkerValue( v ){
+    this._chart.options.annotation.annotations[0].value = v;
+    this._chart.update();
+  }
+  
+  setVerticalHoverMarkerValue( v ){
+    this._chart.options.annotation.annotations[1].value = v;
+    this._chart.update();
+  }
   
   
 }

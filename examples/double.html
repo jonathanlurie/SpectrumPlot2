@@ -1,0 +1,151 @@
+<html>
+<head>
+  <title>SpectrumPlot2 example</title>
+  
+  <style>
+  
+  body {
+    margin: 0;
+    background-color: #ffcccc;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  h1 {
+    width: 100%;
+    text-align: center;
+    font-size: 4em;
+    color: #ff4848;
+    margin-bottom: initial;
+  }
+  
+  h2 {
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 1em;
+    color: #ff4848;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #008fca;
+    transition: all 0.2s;
+  }
+  
+  a:hover {
+    color: #00638c;
+  }
+  
+  code {
+    font-family: "monospace";
+    background-color: #d49595;
+    padding: 0px 5px 0px 5px;
+    border-radius: 5px;
+    color: white;
+  }
+  
+  #container {
+    margin-left: 25vw;
+    margin-right: 25vw;
+  }
+  
+  #description {
+    text-align: center;
+    width: 100%;
+  }
+  
+  #chartDiv1,
+  #chartDiv2 {
+    padding: 20px;
+    background-color: #fafafa;
+    margin-top: 10px;
+    border-radius: 15px;
+    width: 45%;
+    margin: 2.5%;
+  }
+  
+  #multiChart {
+    display: flex;
+  }
+  
+  </style>
+  
+  <!-- importing the automatically build module -->
+  <script src="../dist/SpectrumPlot2.js"></script>
+  
+</head>
+<body>
+  
+
+  <div id="container">
+    <h1>SpectrumPlot2</h1>
+    <h2><a href="https://github.com/jonathanlurie/SpectrumPlot2">fork it on Github</a></h2>
+
+    <div style="text-align: center">Click on one, the marker on the other will sync</div>
+    
+  </div>
+  
+  <div id="multiChart">
+    <div id="chartDiv1"></div>
+    <div id="chartDiv2"></div>
+  </div>
+
+  <script>
+    var sp1 = new SpectrumPlot2.SpectrumPlot2( "chartDiv1", 400, 300 );
+    var sp2 = new SpectrumPlot2.SpectrumPlot2( "chartDiv2", 400, 300 );
+    
+    // enabling the vertical bars
+    sp1.enableMarkers();
+    sp2.enableMarkers();
+    
+    
+    // adding a callbacks for clicking on the plot
+    sp1.on("click", function(data){
+      if( !data.length )
+        return;
+      sp2.setVerticalClickMarkerValue( data[0].x );
+    })
+    
+    // adding a callbacks for clicking on the plot
+    sp2.on("click", function(data){
+      if( !data.length )
+        return;
+      sp1.setVerticalClickMarkerValue( data[0].x );
+    })
+    
+    
+    sp1.addSpectrum( 
+      "the data", 
+      generateFakeData( 100 ),
+      "rgba(250, 80, 80, 0.8)"
+    )
+
+    sp1.setLabels();  
+    sp1.draw();
+    
+    
+    sp2.addSpectrum( 
+      "the other data", 
+      generateFakeData( 100 ),
+      "rgba(250, 80, 250, 0.8)"
+    )
+
+    sp2.setLabels();  
+    sp2.draw();
+    
+
+    // generate random data
+    function generateFakeData( size ){
+      var data = new Array(size);
+      for(var i=0; i<size; i++){
+        data[i] = Math.random() * 10 + 50;
+      }
+      return data;
+    }
+    
+
+
+  </script>
+
+</body>
+</html>
