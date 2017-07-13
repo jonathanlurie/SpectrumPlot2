@@ -132,7 +132,7 @@ class SpectrumPlot2 {
 
         // the legend at the top
         legend: {
-          display: options.showLegend || false,
+          display: options.showLegend === false ? false : true,
           labels: {
             usePointStyle: true
           }
@@ -187,6 +187,10 @@ class SpectrumPlot2 {
 
   }
 
+  showLegend(boolean) {
+    this._chart.options.legend.display = boolean;
+    this._chart.update();
+  }
 
   setLabels( labels=null ){
     if( labels ){
