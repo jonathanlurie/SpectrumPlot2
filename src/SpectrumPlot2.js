@@ -188,9 +188,11 @@ class SpectrumPlot2 {
   }
   showXLabels(boolean) {
     this._chart.options.scales.xAxes[0].display = boolean
+    this._chart.update();
   }
   showYLabels(boolean) {
     this._chart.options.scales.yAxes[0].display = boolean
+    this._chart.update();
   }
   showLegend(boolean) {
     this._chart.options.legend.display = boolean;
