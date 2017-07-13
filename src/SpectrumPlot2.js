@@ -195,7 +195,12 @@ class SpectrumPlot2 {
     });
 
   }
-
+  showXLabels(boolean) {
+    this._chart.options.scales.xAxes[0].display = boolean
+  }
+  showYLabels(boolean) {
+    this._chart.options.scales.yAxes[0].display = boolean
+  }
   showLegend(boolean) {
     this._chart.options.legend.display = boolean;
     this._chart.update();
