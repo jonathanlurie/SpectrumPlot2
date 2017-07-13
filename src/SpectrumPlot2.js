@@ -1,3 +1,12 @@
+/*
+* Author    Jonathan Lurie - http://me.jonahanlurie.fr
+*           Armin Taheri - https://github.com/ArminTaheri
+*
+* License   MIT
+* Link      https://github.com/jonathanlurie/SpectrumPlot2
+* Lab       MCIN - http://mcin.ca/ - Montreal Neurological Institute
+*/
+
 
 import Chart from 'chart.js'
 import annotationPlugin from 'chartjs-plugin-annotation'
