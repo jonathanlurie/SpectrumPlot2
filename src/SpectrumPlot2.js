@@ -49,13 +49,15 @@ class SpectrumPlot2 {
     // used for hover and click event on the plot
     function getHoveredValues( chartElements ){
       var hoveredValues = []
+      var places = options.decimals ? Math.pow(10, options.decimals) : null;
       if( chartElements && chartElements.length){
         var x = chartElements[0]._index;
         for(var i=0; i<chartElements.length; i++){
+          var yVal  = that._chartData.datasets[i].data[x];
           hoveredValues.push({
             label: that._chartData.datasets[i].label,
             x: that._chartData.labels[x],
-            y: that._chartData.datasets[i].data[x]
+            y: places ? Math.floor(yVal * places) / places : yVal,
           })
         }
       }
