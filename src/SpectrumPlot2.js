@@ -194,19 +194,44 @@ class SpectrumPlot2 {
       that._chart.options.annotation.annotations[1].borderColor = that._verticalMarkers.enabled ? that._verticalMarkers.hoverColor : that._verticalMarkers.hiddenColor;
     });
 
+    if( "yMin" in options )
+      this.setYMin( options.yMin );
+    
+    if( "yMax" in options )
+      this.setYMax( options.yMax );
+
   }
+  
+  
+  setYMin( yMin ){
+    this._chart.options.scales.yAxes[0].ticks.suggestedMin = yMin;
+    this._chart.update();
+  }
+  
+  
+  setYMax( yMax ){
+    this._chart.options.scales.yAxes[0].ticks.suggestedMax = yMax;
+    this._chart.update();
+  }
+  
+  
   showXLabels(boolean) {
     this._chart.options.scales.xAxes[0].display = boolean
     this._chart.update();
   }
+  
+  
   showYLabels(boolean) {
     this._chart.options.scales.yAxes[0].display = boolean
     this._chart.update();
   }
+  
+  
   showLegend(boolean) {
     this._chart.options.legend.display = boolean;
     this._chart.update();
   }
+
 
   setLabels( labels=null ){
     if( labels ){

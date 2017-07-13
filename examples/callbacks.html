@@ -89,7 +89,7 @@
     var hoveredDataDiv = document.getElementById("hoveredData");
     var clickedDataDiv = document.getElementById("clickedData");
 
-    var sp = new SpectrumPlot2.SpectrumPlot2( "chartDiv", 400, 300 );
+    var sp = new SpectrumPlot2.SpectrumPlot2( "chartDiv", 400, 300 , {yMin: -10, yMax: 120});
     
     // enabling the vertical bars
     sp.enableMarkers();
